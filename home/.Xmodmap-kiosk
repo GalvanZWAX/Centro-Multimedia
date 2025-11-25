@@ -1,0 +1,16 @@
+clear control
+keycode 37 =
+keycode 105 =
+keycode 70 = NoSymbol
+
+clear mod1
+
+keycode 64  =
+
+keycode 123 = XF86AudioRaiseVolume
+keycode 122 = XF86AudioLowerVolume
+keycode 113 = XF86AudioRewind
+keycode 114 = XF86AudioForward
+keycode 172 = XF86AudioPlay
+keycode 171 = XF86AudioNext
+keycode 173 = XF86AudioPrev

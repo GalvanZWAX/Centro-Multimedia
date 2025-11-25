@@ -1,0 +1,75 @@
+# =========== TECLA ESC ===========
+"bash /home/pi/close_all.sh"
+    Escape
+
+# =========== F1–F12 ===========
+"bash /home/pi/close_all.sh"
+    F1
+
+"bash /home/pi/close_all.sh"
+    F2
+
+"bash /home/pi/close_all.sh"
+    F3
+
+"bash /home/pi/close_all.sh"
+    F4
+
+"bash /home/pi/close_all.sh"
+    F5
+
+"bash /home/pi/close_all.sh"
+    F6
+
+"bash /home/pi/close_all.sh"
+    F7
+
+"bash /home/pi/close_all.sh"
+    F8
+
+"bash /home/pi/close_all.sh"
+    F9
+
+"bash /home/pi/close_all.sh"
+    F10
+
+"bash /home/pi/close_all.sh"
+    F11
+
+"bash /home/pi/close_all.sh"
+    F12
+
+# ===========================
+#  TECLAS MULTIMEDIA
+# ===========================
+
+# Subir volumen
+"amixer -q sset Master 5%+"
+    XF86AudioRaiseVolume
+
+# Bajar volumen
+"amixer -q sset Master 5%-"
+    XF86AudioLowerVolume
+
+# Mute
+"amixer -q sset Master toggle"
+    XF86AudioMute
+
+# Play / Pause (para VLC, Spotify Web, YouTube)
+"playerctl play-pause"
+    XF86AudioPlay
+
+# Siguiente pista
+"playerctl next"
+    XF86AudioNext
+
+# Pista anterior
+"playerctl previous"
+    XF86AudioPrev
+
+# Forward / Rewind (para VLC)
+"playerctl position 5+"
+    XF86AudioForward
+
+"playerctl position 5-"
+    XF86AudioRewind
