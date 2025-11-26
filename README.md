@@ -9,3 +9,6 @@ Lozano Bustamante Miguel Alejandro
 Contiene siete archivos:  
   Los cuatro de _home_ se colocan en el directorio homónimo de la Raspberry.  
   Los tres de _config_ se colocan en los directorios indicados en el documento tipo manual.
+
+Repositorio de GitHub: http://github.com/GalvanZWAX/Centro-Multimedia
+Video Demostrativo: https://youtu.be/d_VWu-EdOY0
