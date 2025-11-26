@@ -16,7 +16,7 @@ EXT_IMAGENES = {".jpg", ".jpeg", ".png", ".bmp", ".gif"}
 EXT_VIDEOS   = {".mp4", ".mkv", ".avi", ".mov"}
 EXT_MUSICA   = {".mp3", ".flac", ".wav", ".ogg"}
 
-CHROMIUM = "/usr/bin/chromium"   
+CHROMIUM = "/usr/bin/chromium" 
 VLC      = "/usr/bin/vlc"
 
 # Rutas locales por defecto
@@ -39,7 +39,7 @@ AMAZON_MUSIC_URL= "https://music.amazon.com"
 
 def launch_and_wait(cmd):
     print("[INFO] Ejecutando:", " ".join(cmd))
-    root.withdraw() #oculta ventana del menu en reproduccion
+    root.withdraw()
     try:
         proc = subprocess.Popen(cmd)
         proc.wait()
@@ -48,6 +48,7 @@ def launch_and_wait(cmd):
     finally:
         # Al terminar, mostramos de nuevo el menu
         root.deiconify()
+        restore_mouse_cursor()
 
 
 # ----------------- Lanzadores de servicios online -----------------
@@ -95,6 +96,7 @@ def play_local_videos():
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         LOCAL_VIDEO_DIR
     ]
     launch_and_wait(cmd)
@@ -126,6 +128,7 @@ def slideshow_photos():
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         "--loop",
         "--image-duration=3"
     ]
@@ -142,6 +145,7 @@ def play_local_music():
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         "--loop",
         LOCAL_MUSIC_DIR
     ]
@@ -155,7 +159,14 @@ def quit_app():
             "shutdown",
             "now",
     ]
-    launch_and_wait(cmd)    
+    launch_and_wait(cmd)
+
+def restore_mouse_cursor():
+    os.system("xsetroot -cursor_name left_ptr")
+    os.system("xinput --disable 'pointer:Virtual core pointer'")
+    time.sleep(0.2)
+    os.system("xinput --enable 'pointer:Virtual core pointer'")
+    
 
 
 # ----------------- Interfaz grafica -----------------
@@ -342,35 +353,52 @@ def play_usb_photos(base_path, images=None):
         "--fullscreen",
         "--no-video-title-show",
         "--image-duration=3",
+        "--mouse-hide-timeout=0",
         "--loop",
     ]
     cmd.extend(images)
     root.withdraw()
     launch_and_wait(cmd)
 
-def play_usb_music(base_path):
+def play_usb_music(base_path, music=None):
     """Reproduccion de musica desde la USB en bucle."""
+    if music is None:
+        _, _, music = scan_usb_content(base_path)
+
+    if not music:
+        messagebox.showinfo("Música", "No se encontraron pistas de música en la USB.")
+        return
+
     cmd = [
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         "--loop",
-        base_path
     ]
-    root.withdraw()
+    cmd.extend(music)   # solo archivos de audio
     launch_and_wait(cmd)
 
-def play_usb_videos_slideshow(base_path):
+
+def play_usb_videos_slideshow(base_path, videos=None):
     """Videos de la USB uno tras otro"""
+    if videos is None:
+        _, videos, _ = scan_usb_content(base_path)
+
+    if not videos:
+        messagebox.showinfo("Videos", "No se encontraron videos en la USB.")
+        return
+
     cmd = [
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         "--loop",
-        base_path
     ]
-    root.withdraw()
+    cmd.extend(videos)   #solo archivos de video
     launch_and_wait(cmd)
+
 
 def play_single_video(video_path):
     """Reproducir un solo video"""
@@ -378,6 +406,7 @@ def play_single_video(video_path):
         VLC,
         "--fullscreen",
         "--no-video-title-show",
+        "--mouse-hide-timeout=0",
         video_path
     ]
     launch_and_wait(cmd)
@@ -489,7 +518,7 @@ def handle_usb_media(base_path):
     # Solo música
     if tipos == 1 and n_mus > 0:
         messagebox.showinfo("USB", "Se detectaron solo pistas de música.\nIniciando reproducción en bucle.")
-        play_usb_music(base_path)
+        play_usb_music(base_path, music)
         return
 
     # Solo videos
@@ -499,7 +528,7 @@ def handle_usb_media(base_path):
             "Se detectaron solo videos.\n\n¿Reproducir todos en modo presentación?"
         )
         if resp:
-            play_usb_videos_slideshow(base_path)
+            play_usb_videos_slideshow(base_path, videos)
         else:
             choose_video_and_play(videos)
         return
@@ -545,7 +574,7 @@ def handle_usb_media(base_path):
                 "¿Reproducir todos los videos en modo presentación?"
             )
             if resp2:
-                play_usb_videos_slideshow(base_path)
+                play_usb_videos_slideshow(base_path, videos)
             else:
                 choose_video_and_play(videos)
         else:
@@ -554,7 +583,7 @@ def handle_usb_media(base_path):
     def choose_music():
         win.destroy()
         if n_mus > 0:
-            play_usb_music(base_path)
+            play_usb_music(base_path, music)
         else:
             messagebox.showinfo("Música", "No hay música disponible en la USB.")
 
